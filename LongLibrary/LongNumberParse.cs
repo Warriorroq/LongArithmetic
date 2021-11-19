@@ -12,7 +12,7 @@ namespace LongLibrary
                 numberSign = LongNumberSign.minus;
             return numberSign;
         }
-        public static List<int> ConvertStringNumToListDigits(string bigNum, int basisLength)
+        public static List<int> ConvertStringNumToListDigits(string bigNum, int basisLength, LongNumberSign sign)
         {
             List<int> digits = new();
             int index = bigNum.Length - 1;
@@ -22,20 +22,32 @@ namespace LongLibrary
                 if (char.IsDigit(bigNum[index]))
                     builder.Append(bigNum[index]);
                 if (builder.Length >= basisLength)
-                    AddStringBuilderToDigitsList(builder, digits);
+                    AddStringBuilderToDigitsList(builder, digits, sign);
                 index--;
             }
             if (builder.Length != 0)
-                AddStringBuilderToDigitsList(builder, digits);
+                AddStringBuilderToDigitsList(builder, digits, sign);
+            RemoveZerosFromEndOfList(digits);
             return digits;
         }
-        private static void AddStringBuilderToDigitsList(StringBuilder builder, List<int> nums)
+        private static void AddStringBuilderToDigitsList(StringBuilder builder, List<int> nums, LongNumberSign sign)
         {
             builder.Reverse();
-            nums.Add(ConvertStringBuilderNumToDigits(builder));
+            var digit = ConvertStringBuilderNumToDigits(builder) * (int)sign;
             builder.Clear();
+            nums.Add(digit);
         }
         private static int ConvertStringBuilderNumToDigits(StringBuilder builder)
            => int.Parse(builder.ToString());
+        private static void RemoveZerosFromEndOfList(List<int> list)
+        {
+            for(int i = list.Count - 1; i >= 0; i--)
+            {
+                if (list[i] == 0)
+                    list.RemoveAt(i);
+                else
+                    return;
+            }
+        }
     }
 }

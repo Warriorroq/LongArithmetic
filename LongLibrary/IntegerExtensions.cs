@@ -7,7 +7,7 @@ namespace LongLibrary
         public static int Length(this int number)
         {
             var result = 0;
-            if (result == 1)
+            if (number == 0)
                 return 1;
             while (number > 0)
             {

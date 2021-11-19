@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using LongLibrary;
 namespace LongNumbers
 {
@@ -9,10 +10,19 @@ namespace LongNumbers
             => new Program().Execute();
         private void Execute()
         {
-            LongNumber longNumber2 = new LongNumber(Console.ReadLine());
-            LongNumber longNumber1 = new LongNumber(Console.ReadLine());
-            longNumber1 += longNumber2;
-            Console.WriteLine(longNumber1);
+            var breakNum = new LongNumber("10");
+
+            while(true)
+            {
+                LongNumber longNumber1 = new LongNumber(Console.ReadLine());
+                LongNumber longNumber2 = new LongNumber(Console.ReadLine());
+                Console.WriteLine(longNumber1 == longNumber2);
+                Console.WriteLine(longNumber1 + longNumber2);
+                if (longNumber1 == breakNum || longNumber2 == breakNum)
+                    break;
+
+            }
+
         }
     }
 
