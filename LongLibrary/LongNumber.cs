@@ -4,7 +4,7 @@ using System.Text;
 
 namespace LongLibrary
 {
-    public class LongNumber
+    public class LongNumber : ICloneable
     {
         public LongNumber(string digits)
         {
@@ -16,6 +16,12 @@ namespace LongLibrary
                 numberSign = LongNumberSign.plus;
             }
         }
+        private LongNumber(List<int> digits, LongNumberSign numberSign)
+        {
+            this.digits = new List<int>();
+            this.digits.AddRange(digits);
+            this.numberSign = numberSign;
+        }
         public int Length => digits.Count;
         protected List<int> digits;
         protected LongNumberSign numberSign;
@@ -23,14 +29,22 @@ namespace LongLibrary
         protected const int basisLength = 6;
         public static LongNumber operator +(LongNumber firstNum, LongNumber secondNum)
         {
+            if (firstNum.numberSign != secondNum.numberSign)
+                return null;
             if (secondNum.Length > firstNum.Length)
                 (firstNum, secondNum) = (secondNum, firstNum);
-            if (firstNum.numberSign == secondNum.numberSign)
-            {
-                for(int i = 0; i < secondNum.Length; i++)
-                    firstNum.AddValueToDigits(secondNum.digits[i], i);
-            }
+            for (int i = 0; i < secondNum.Length; i++)
+                firstNum.AddValueToDigits(secondNum.digits[i], i);
             return firstNum;
+        }
+        public static LongNumber operator -(LongNumber firstNum, LongNumber secondNum)
+        {
+            if (firstNum.numberSign != secondNum.numberSign)
+            {
+                secondNum.numberSign = (LongNumberSign)((int)secondNum.numberSign * -1);
+                return firstNum + secondNum;
+            }
+            return null;
         }
         private void AddValueToDigits(int value, int index)
         {
@@ -72,6 +86,8 @@ namespace LongLibrary
                 builder.Append("0");
             return builder.ToString();
         }
+        public object Clone()
+            => new LongNumber(digits,numberSign);
     }
     public enum LongNumberSign
     {
