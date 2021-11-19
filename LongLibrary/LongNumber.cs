@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -75,7 +75,7 @@ namespace LongLibrary
     }
     public enum LongNumberSign
     {
-        plus = 0,
-        minus = 1,
+        plus = 1,
+        minus = -1,
     }
 }

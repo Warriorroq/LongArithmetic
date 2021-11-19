@@ -12,7 +12,7 @@ namespace LongLibrary
                 numberSign = LongNumberSign.minus;
             return numberSign;
         }
-        public static List<int> ConvertStringNumToListDigits(string bigNum, int basisLength, LongNumberSign sign)
+        public static List<int> ConvertStringNumToListDigits(string bigNum, int basisLength)
         {
             List<int> digits = new();
             int index = bigNum.Length - 1;
@@ -22,18 +22,18 @@ namespace LongLibrary
                 if (char.IsDigit(bigNum[index]))
                     builder.Append(bigNum[index]);
                 if (builder.Length >= basisLength)
-                    AddStringBuilderToDigitsList(builder, digits, sign);
+                    AddStringBuilderToDigitsList(builder, digits);
                 index--;
             }
             if (builder.Length != 0)
-                AddStringBuilderToDigitsList(builder, digits, sign);
+                AddStringBuilderToDigitsList(builder, digits);
             RemoveZerosFromEndOfList(digits);
             return digits;
         }
-        private static void AddStringBuilderToDigitsList(StringBuilder builder, List<int> nums, LongNumberSign sign)
+        private static void AddStringBuilderToDigitsList(StringBuilder builder, List<int> nums)
         {
             builder.Reverse();
-            var digit = ConvertStringBuilderNumToDigits(builder) * (int)sign;
+            var digit = ConvertStringBuilderNumToDigits(builder);
             builder.Clear();
             nums.Add(digit);
         }
