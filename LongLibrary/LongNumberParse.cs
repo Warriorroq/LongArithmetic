@@ -39,13 +39,16 @@ namespace LongLibrary
         }
         private static void RemoveZerosFromEndOfList(List<ulong> list)
         {
+            var number = 0;
             for(int i = list.Count - 1; i >= 0; i--)
             {
                 if (list[i] == 0)
-                    list.RemoveAt(i);
+                    number++;
                 else
-                    return;
+                    break;
             }
+            if(number != 0)
+                list.RemoveRange(0, number);
         }
     }
 }
