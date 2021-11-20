@@ -12,9 +12,9 @@ namespace LongLibrary
                 numberSign = LongNumberSign.minus;
             return numberSign;
         }
-        public static List<int> ConvertStringNumToListDigits(string bigNum, int basisLength)
+        public static List<ulong> ConvertStringNumToListDigits(string bigNum, int basisLength)
         {
-            List<int> digits = new();
+            List<ulong> digits = new();
             int index = bigNum.Length - 1;
             StringBuilder builder = new StringBuilder();
             while (index >= 0)
@@ -30,14 +30,14 @@ namespace LongLibrary
             RemoveZerosFromEndOfList(digits);
             return digits;
         }
-        private static void AddStringBuilderToDigitsList(StringBuilder builder, List<int> nums)
+        private static void AddStringBuilderToDigitsList(StringBuilder builder, List<ulong> nums)
         {
             builder.Reverse();
-            var digit = int.Parse(builder.ToString());
+            var digit = ulong.Parse(builder.ToString());
             builder.Clear();
             nums.Add(digit);
         }
-        private static void RemoveZerosFromEndOfList(List<int> list)
+        private static void RemoveZerosFromEndOfList(List<ulong> list)
         {
             for(int i = list.Count - 1; i >= 0; i--)
             {

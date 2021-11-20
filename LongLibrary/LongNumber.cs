@@ -17,18 +17,18 @@ namespace LongLibrary
                 numberSign = LongNumberSign.plus;
             }
         }
-        private LongNumber(List<int> digits, LongNumberSign numberSign)
+        private LongNumber(List<ulong> digits, LongNumberSign numberSign)
         {
-            this.digits = new List<int>();
+            this.digits = new List<ulong>();
             this.digits.AddRange(digits);
             this.numberSign = numberSign;
         }
         #endregion Constructors
         public int Length => digits.Count;
-        protected List<int> digits;
+        protected List<ulong> digits;
         protected LongNumberSign numberSign;
-        protected const int basis = 1_000_000;
-        protected const int basisLength = 6;
+        protected const ulong basis = 1_000_000_000_000_000_000;
+        protected const int basisLength = 18;
         #region Operators
         public static LongNumber operator +(LongNumber firstNum, LongNumber secondNum)
         {
@@ -62,7 +62,7 @@ namespace LongLibrary
         }
         public static bool operator !=(LongNumber firstNum, LongNumber secondNum)
             => !(firstNum == secondNum);
-        private void AddValueToDigits(int value, int index)
+        private void AddValueToDigits(ulong value, int index)
         {
             var sum = value + digits[index];
             if (sum >= basis)
@@ -97,7 +97,7 @@ namespace LongLibrary
             }
             return builder.ToString();
         }
-        private string GetZerosInDigit(int number)
+        private string GetZerosInDigit(ulong number)
         {
             StringBuilder builder = new();
             for(int i = 0;i < basisLength - number.Length();i++)
