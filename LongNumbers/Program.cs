@@ -15,10 +15,14 @@ namespace LongNumbers
             {
                 LongNumber longNumber1 = new LongNumber(Console.ReadLine());
                 LongNumber longNumber2 = new LongNumber(Console.ReadLine());
+                string strlnum1 = longNumber1.ToString();
+                string strlnum2 = longNumber2.ToString();
                 var temp1 = longNumber1.Clone() as LongNumber;
                 var temp2 = longNumber2.Clone() as LongNumber;
-                Console.WriteLine($" - {longNumber1 - longNumber2}");
-                Console.WriteLine($" + {temp1 + temp2}");
+                Console.WriteLine($" {strlnum1} == {strlnum2} is {longNumber1 == longNumber2}");
+                Console.WriteLine($" {strlnum1} != {strlnum2} is {longNumber1 != longNumber2}");
+                Console.WriteLine($" {strlnum1} - {strlnum2} is {longNumber1 - longNumber2}");
+                Console.WriteLine($" {strlnum1} + {strlnum2} is {temp1 + temp2}");
                 if (longNumber1 == breakNum || longNumber2 == breakNum)
                     break;
 

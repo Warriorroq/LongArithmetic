@@ -6,6 +6,7 @@ namespace LongLibrary
 {
     public class LongNumber : ICloneable
     {
+        #region Constructors
         public LongNumber(string digits)
         {
             numberSign = LongNumberParse.GetNumberSign(digits);
@@ -22,11 +23,13 @@ namespace LongLibrary
             this.digits.AddRange(digits);
             this.numberSign = numberSign;
         }
+        #endregion Constructors
         public int Length => digits.Count;
         protected List<int> digits;
         protected LongNumberSign numberSign;
         protected const int basis = 1_000_000;
         protected const int basisLength = 6;
+        #region Operators
         public static LongNumber operator +(LongNumber firstNum, LongNumber secondNum)
         {
             if (firstNum.numberSign != secondNum.numberSign)
@@ -46,10 +49,23 @@ namespace LongLibrary
             }
             return null;
         }
+        public static bool operator ==(LongNumber firstNum, LongNumber secondNum)
+        {
+            if (firstNum.numberSign != secondNum.numberSign)
+                return false;
+            if (firstNum.Length != secondNum.Length)
+                return false;
+            for (int i = 0; i < firstNum.Length; i++)
+                if (firstNum.digits[i] != secondNum.digits[i])
+                    return false;
+            return true;
+        }
+        public static bool operator !=(LongNumber firstNum, LongNumber secondNum)
+            => !(firstNum == secondNum);
         private void AddValueToDigits(int value, int index)
         {
             var sum = value + digits[index];
-            if(sum >= basis)
+            if (sum >= basis)
             {
                 if (digits.Count - 1 == index)
                 {
@@ -63,6 +79,8 @@ namespace LongLibrary
             }
             digits[index] += value;
         }
+        #endregion Operators
+        #region ToString
         public override string ToString()
         {
             StringBuilder builder = new StringBuilder();
@@ -73,21 +91,24 @@ namespace LongLibrary
             i--;
             while (i >= 0)
             {
-                builder.Append(GetZerosInNum(digits[i]));
+                builder.Append(GetZerosInDigit(digits[i]));
                 builder.Append(digits[i]);
                 i--;
             }
             return builder.ToString();
         }
-        private string GetZerosInNum(int number)
+        private string GetZerosInDigit(int number)
         {
             StringBuilder builder = new();
             for(int i = 0;i < basisLength - number.Length();i++)
                 builder.Append("0");
             return builder.ToString();
         }
+        #endregion ToString
+        #region Clone
         public object Clone()
-            => new LongNumber(digits,numberSign);
+            => new LongNumber(digits, numberSign);
+        #endregion Clone
     }
     public enum LongNumberSign
     {

@@ -33,12 +33,10 @@ namespace LongLibrary
         private static void AddStringBuilderToDigitsList(StringBuilder builder, List<int> nums)
         {
             builder.Reverse();
-            var digit = ConvertStringBuilderNumToDigits(builder);
+            var digit = int.Parse(builder.ToString());
             builder.Clear();
             nums.Add(digit);
         }
-        private static int ConvertStringBuilderNumToDigits(StringBuilder builder)
-           => int.Parse(builder.ToString());
         private static void RemoveZerosFromEndOfList(List<int> list)
         {
             for(int i = list.Count - 1; i >= 0; i--)
