@@ -40,7 +40,8 @@ namespace LongLibrary
         private static void RemoveZerosFromEndOfList(List<ulong> list)
         {
             var number = 0;
-            for(int i = list.Count - 1; i >= 0; i--)
+            var count = list.Count - 1;
+            for (int i = count; i >= 0; i--)
             {
                 if (list[i] == 0)
                     number++;
@@ -48,7 +49,7 @@ namespace LongLibrary
                     break;
             }
             if(number != 0)
-                list.RemoveRange(0, number);
+                list.RemoveRange(count - number, number);
         }
     }
 }
