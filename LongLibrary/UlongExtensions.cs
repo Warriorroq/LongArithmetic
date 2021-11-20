@@ -1,10 +1,8 @@
-﻿using System;
-
-namespace LongLibrary
+﻿namespace LongLibrary
 {
-    public static class IntegerExtensions
+    public static class UlongExtensions
     {
-        public static int Length(this int number)
+        public static int Length(this ulong number)
         {
             var result = 0;
             if (number == 0)
