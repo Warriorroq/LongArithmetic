@@ -3,7 +3,7 @@ using System.Text;
 
 namespace LongLibrary
 {
-    public static class LongNumberParse
+    internal static class LongNumberParse
     {
         public static LongNumberSign GetNumberSign(string digits)
         {
@@ -12,9 +12,9 @@ namespace LongLibrary
                 numberSign = LongNumberSign.minus;
             return numberSign;
         }
-        public static List<ulong> ConvertStringNumToListDigits(string bigNum, int basisLength)
+        public static List<long> ConvertStringNumToListDigits(string bigNum, int basisLength)
         {
-            List<ulong> digits = new();
+            List<long> digits = new();
             int index = bigNum.Length - 1;
             StringBuilder builder = new StringBuilder();
             while (index >= 0)
@@ -30,14 +30,14 @@ namespace LongLibrary
             RemoveZerosFromEndOfList(digits);
             return digits;
         }
-        private static void AddStringBuilderToDigitsList(StringBuilder builder, List<ulong> nums)
+        private static void AddStringBuilderToDigitsList(StringBuilder builder, List<long> nums)
         {
             builder.Reverse();
-            var digit = ulong.Parse(builder.ToString());
+            var digit = long.Parse(builder.ToString());
             builder.Clear();
             nums.Add(digit);
         }
-        private static void RemoveZerosFromEndOfList(List<ulong> list)
+        private static void RemoveZerosFromEndOfList(List<long> list)
         {
             var number = 0;
             var count = list.Count - 1;

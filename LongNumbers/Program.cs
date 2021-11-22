@@ -9,12 +9,12 @@ namespace LongNumbers
             => new Program().Execute();
         private void Execute()
         {
-            var breakNum = new LongNumber("10");
+            var breakNum = LongMath.GetLongNumber("10");
 
-            while(true)
+            while (true)
             {
-                LongNumber longNumber1 = new LongNumber(Console.ReadLine());
-                LongNumber longNumber2 = new LongNumber(Console.ReadLine());
+                LongNumber longNumber1 = LongMath.GetLongNumber(Console.ReadLine());
+                LongNumber longNumber2 = LongMath.GetLongNumber(Console.ReadLine());
                 string strlnum1 = longNumber1.ToString();
                 string strlnum2 = longNumber2.ToString();
                 var temp1 = longNumber1.Clone() as LongNumber;

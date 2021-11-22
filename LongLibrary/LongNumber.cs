@@ -6,29 +6,17 @@ namespace LongLibrary
 {
     public class LongNumber : ICloneable
     {
-        #region Constructors
-        public LongNumber(string digits)
+        public int Length => digits.Count;
+        protected List<long> digits;
+        protected LongNumberSign numberSign;
+        protected const long basis = 1_000_000_000;
+        internal const int basisLength = 9;
+        private LongNumber(){}
+        internal LongNumber(List<long> digits, LongNumberSign numberSign)
         {
-            numberSign = LongNumberParse.GetNumberSign(digits);
-            this.digits = LongNumberParse.ConvertStringNumToListDigits(digits, basisLength);
-            if (this.digits.Count is 0)
-            {
-                this.digits.Add(0);
-                numberSign = LongNumberSign.plus;
-            }
-        }
-        private LongNumber(List<ulong> digits, LongNumberSign numberSign)
-        {
-            this.digits = new List<ulong>();
-            this.digits.AddRange(digits);
+            this.digits = digits;
             this.numberSign = numberSign;
         }
-        #endregion Constructors
-        public int Length => digits.Count;
-        protected List<ulong> digits;
-        protected LongNumberSign numberSign;
-        protected const ulong basis = 1_000_000_000_000_000_000;
-        protected const int basisLength = 18;
         #region Operators
         public static LongNumber operator +(LongNumber firstNum, LongNumber secondNum)
         {
@@ -62,7 +50,7 @@ namespace LongLibrary
         }
         public static bool operator !=(LongNumber firstNum, LongNumber secondNum)
             => !(firstNum == secondNum);
-        private void AddValueToDigits(ulong value, int index)
+        private void AddValueToDigits(long value, int index)
         {
             var sum = value + digits[index];
             if (sum >= basis)
@@ -97,7 +85,7 @@ namespace LongLibrary
             }
             return builder.ToString();
         }
-        private string GetZerosInDigit(ulong number)
+        private string GetZerosInDigit(long number)
         {
             StringBuilder builder = new();
             for(int i = 0;i < basisLength - number.Length();i++)
@@ -107,7 +95,12 @@ namespace LongLibrary
         #endregion ToString
         #region Clone
         public object Clone()
-            => new LongNumber(digits, numberSign);
+        {
+            var clone = new LongNumber();
+            clone.digits = new List<long>(digits);
+            clone.numberSign = numberSign;
+            return clone;
+        }
         #endregion Clone
     }
     public enum LongNumberSign
