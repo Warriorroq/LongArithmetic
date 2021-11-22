@@ -30,15 +30,10 @@ namespace LongLibrary
             RemoveZerosFromEndOfList(digits);
             return digits;
         }
-        private static void AddStringBuilderToDigitsList(StringBuilder builder, List<long> nums)
+        public static void RemoveZerosFromEndOfList(List<long> list)
         {
-            builder.Reverse();
-            var digit = long.Parse(builder.ToString());
-            builder.Clear();
-            nums.Add(digit);
-        }
-        private static void RemoveZerosFromEndOfList(List<long> list)
-        {
+            if (list.Count == 1)
+                return;
             var number = 0;
             var count = list.Count - 1;
             for (int i = count; i >= 0; i--)
@@ -48,8 +43,15 @@ namespace LongLibrary
                 else
                     break;
             }
-            if(number != 0)
+            if (number != 0)
                 list.RemoveRange(count - number, number);
+        }
+        private static void AddStringBuilderToDigitsList(StringBuilder builder, List<long> nums)
+        {
+            builder.Reverse();
+            var digit = long.Parse(builder.ToString());
+            builder.Clear();
+            nums.Add(digit);
         }
     }
 }
