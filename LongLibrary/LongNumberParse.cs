@@ -44,7 +44,7 @@ namespace LongLibrary
                     break;
             }
             if (number != 0)
-                list.RemoveRange(count - number, number);
+                list.RemoveRange(list.Count - number, number);
         }
         private static void AddStringBuilderToDigitsList(StringBuilder builder, List<long> nums)
         {

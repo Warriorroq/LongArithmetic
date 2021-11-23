@@ -9,16 +9,20 @@ namespace LongNumbers
             => new Program().Execute();
         private void Execute()
         {
-            var breakNum = LongMath.GetLongNumber("10");
-
             while (true)
             {
-                LongNumber longNumber1 = LongMath.GetLongNumber(Console.ReadLine());
-                LongNumber longNumber2 = LongMath.GetLongNumber(Console.ReadLine());
-                var a = longNumber2 + longNumber1;
-                Console.WriteLine(a);
+                LongNumber longNumber1 = LongMath.GetLongNumber(ConsoleAsk("num1:"));
+                LongNumber longNumber2 = LongMath.GetLongNumber(ConsoleAsk("num2:"));
+                Console.WriteLine($"{longNumber1} + {longNumber2} = {longNumber1 + longNumber2}");
+                Console.WriteLine($"{longNumber1} - {longNumber2} = {longNumber1 - longNumber2}");
+                Console.WriteLine($"{longNumber1} == {longNumber2} = {longNumber1 == longNumber2}");
+                Console.WriteLine($"{longNumber1} != {longNumber2} = {longNumber1 != longNumber2}");
             }
-
+        }
+        private string ConsoleAsk(string question)
+        {
+            Console.WriteLine(question);
+            return Console.ReadLine();
         }
     }
 
