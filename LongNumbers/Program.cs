@@ -15,8 +15,13 @@ namespace LongNumbers
                 LongNumber longNumber2 = LongMath.GetLongNumber(ConsoleAsk("num2:"));
                 Console.WriteLine($"{longNumber1} + {longNumber2} = {longNumber1 + longNumber2}");
                 Console.WriteLine($"{longNumber1} - {longNumber2} = {longNumber1 - longNumber2}");
+                Console.WriteLine($"{longNumber1} * {longNumber2} = {longNumber1 * longNumber2}");
                 Console.WriteLine($"{longNumber1} == {longNumber2} = {longNumber1 == longNumber2}");
                 Console.WriteLine($"{longNumber1} != {longNumber2} = {longNumber1 != longNumber2}");
+                Console.WriteLine($"{longNumber1} >= {longNumber2} = {longNumber1 >= longNumber2}");
+                Console.WriteLine($"{longNumber1} <= {longNumber2} = {longNumber1 <= longNumber2}");
+                Console.WriteLine($"{longNumber1} > {longNumber2} = {longNumber1 > longNumber2}");
+                Console.WriteLine($"{longNumber1} < {longNumber2} = {longNumber1 < longNumber2}");
             }
         }
         private string ConsoleAsk(string question)

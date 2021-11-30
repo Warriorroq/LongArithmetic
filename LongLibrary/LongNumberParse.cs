@@ -36,7 +36,7 @@ namespace LongLibrary
                 return;
             var number = 0;
             var count = list.Count - 1;
-            for (int i = count; i >= 0; i--)
+            for (int i = count; i > 0; i--)
             {
                 if (list[i] == 0)
                     number++;
