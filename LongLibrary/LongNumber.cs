@@ -31,8 +31,7 @@ namespace LongLibrary
         #region Operators
         public static LongNumber operator +(LongNumber firstNum, LongNumber secondNum)
         {
-            List<long> list = new List<long>();
-            OperateAllDigits(firstNum, secondNum, list, SumUp);
+            List<long> list = OperateAllDigits(firstNum, secondNum, SumUp);
             LongNumberParse.RemoveZerosFromEndOfList(list);
             LongNumberSign sign = list[list.Count - 1] < 0 ? LongNumberSign.minus : LongNumberSign.plus;
             CorrectData(list, CorrectDigits);
@@ -40,14 +39,12 @@ namespace LongLibrary
         }
         public static LongNumber operator -(LongNumber firstNum, LongNumber secondNum)
         {
-            List<long> list = new List<long>();
-            OperateAllDigits(firstNum, secondNum, list, Reduce);
+            List<long> list = OperateAllDigits(firstNum, secondNum, SumUp);
             LongNumberParse.RemoveZerosFromEndOfList(list);
             LongNumberSign sign = list[list.Count - 1] < 0 ? LongNumberSign.minus : LongNumberSign.plus;
             CorrectData(list, CorrectDigits);
             return new LongNumber(list, sign);
         }
-        // TODO: this
         public static LongNumber operator *(LongNumber firstNum, LongNumber secondNum)
         {
             LongNumberSign sign = (LongNumberSign)((int)firstNum._numberSign * (int)secondNum._numberSign);
@@ -71,8 +68,7 @@ namespace LongLibrary
         {
             if (firstNum._numberSign != secondNum._numberSign)
                 return firstNum._numberSign == LongNumberSign.minus ? false : true;
-            var list = new List<long>();
-            OperateAllDigits(firstNum, secondNum, list, Reduce);
+            var list = OperateAllDigits(firstNum, secondNum, Reduce);
             LongNumberParse.RemoveZerosFromEndOfList(list);
             LongNumberSign sign = list[list.Count - 1] < 0 ? LongNumberSign.minus : LongNumberSign.plus;
             return sign == firstNum._numberSign;
@@ -94,16 +90,16 @@ namespace LongLibrary
         {
             for(int i =0;i < digits.Count - 1;i++)
             {
-                var additionDigits = digits[i] / _basis;
+                //var additionDigits = digits[i] / _basis;
                 if (digits[i] >= _basis)
                 {
-                    digits[i + 1] += additionDigits;
-                    digits[i] -= _basis * additionDigits;
+                    digits[i + 1]++; //additionDigits;
+                    digits[i] -= _basis; //* additionDigits;
                 }
                 else if (digits[i] < 0)
                 {
-                    digits[i + 1] -= additionDigits;
-                    digits[i] += _basis * additionDigits;
+                    digits[i + 1]--; //additionDigits;
+                    digits[i] += _basis; //* additionDigits;
                 }
                 digits[i] = Math.Abs(digits[i]);
             }
@@ -112,24 +108,43 @@ namespace LongLibrary
         private static void CorrectLastDigit(List<long> digits)
         {
             var last = digits[digits.Count - 1];
-            var lastAdditionDigits = Math.Abs(digits[digits.Count - 1] / _basis);
             if (last >= _basis)
             {
-                last -= _basis * lastAdditionDigits;
+                last -= _basis;
                 digits[digits.Count - 1] = last;
-                digits.Add(lastAdditionDigits);
+                digits.Add(1);
             }
             else if (last <= -_basis)
             {
-                last += _basis * lastAdditionDigits;
+                last += _basis;
                 digits[digits.Count - 1] = Math.Abs(last);
-                digits.Add(lastAdditionDigits);
+                digits.Add(1);
             }
             else if (last < 0)
                 digits[digits.Count - 1] = Math.Abs(last);
         }
-        private static void OperateAllDigits(LongNumber firstNum, LongNumber secondNum, List<long> result, Func<long,long,long> func)
+        private static void CorrectListMultipleDigit(List<long> list)
         {
+            for (int g = 0; g < list.Count - 1; g++)
+            {
+                var additionDigits = list[g] / _basis;
+                if (list[g] >= _basis)
+                {
+                    list[g + 1] += additionDigits;
+                    list[g] -= _basis * additionDigits;
+                }
+            }
+            var last = list[list.Count - 1];
+            if (last >= _basis)
+            {
+                last -= _basis;
+                list[list.Count - 1] = last;
+                list.Add(1);
+            }
+        }
+        private static List<long> OperateAllDigits(LongNumber firstNum, LongNumber secondNum, Func<long,long,long> func)
+        {
+            List<long> result = new();
             var length = firstNum.Count > secondNum.Count ? firstNum.Count : secondNum.Count;
             for (var i = 0; i < length; i++)
             {
@@ -146,6 +161,7 @@ namespace LongLibrary
                     num2 = 0;
                 result.Add(func(num1, num2));
             }
+            return result;
         }
         public static bool operator ==(LongNumber firstNum, LongNumber secondNum)
         {
