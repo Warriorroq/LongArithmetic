@@ -16,6 +16,7 @@ namespace LongNumbers
                 Console.WriteLine($"{longNumber1} + {longNumber2} = {longNumber1 + longNumber2}");
                 Console.WriteLine($"{longNumber1} - {longNumber2} = {longNumber1 - longNumber2}");
                 Console.WriteLine($"{longNumber1} * {longNumber2} = {longNumber1 * longNumber2}");
+                Console.WriteLine($"{longNumber1} / {longNumber2} = {longNumber1 / longNumber2}");
                 Console.WriteLine($"{longNumber1} == {longNumber2} = {longNumber1 == longNumber2}");
                 Console.WriteLine($"{longNumber1} != {longNumber2} = {longNumber1 != longNumber2}");
                 Console.WriteLine($"{longNumber1} >= {longNumber2} = {longNumber1 >= longNumber2}");

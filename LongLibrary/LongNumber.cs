@@ -18,32 +18,40 @@ namespace LongLibrary
             _digits = new List<long>(longNumber._digits);
             _numberSign = longNumber._numberSign;
         }
-        internal LongNumber(List<long> digits, LongNumberSign numberSign)
+        public LongNumber(LongNumberSign numberSign, List<long> digits)
         {
-            _digits = digits;
+            _digits = new List<long>(digits);
             _numberSign = numberSign;
         }
         private LongNumber()
         {
             _digits = new List<long>();
+            _digits.Add(0);
+            _numberSign = LongNumberSign.plus;
+        }
+        private LongNumber(LongNumberSign numberSign = LongNumberSign.plus, params long[] nums)
+        {
+            _digits = new List<long>(nums);            
             _numberSign = LongNumberSign.plus;
         }
         #region Operators
         public static LongNumber operator +(LongNumber firstNum, LongNumber secondNum)
         {
-            List<long> list = OperateAllDigits(firstNum, secondNum, SumUp);
+            List<long> list = OperateAllDigits(firstNum, secondNum, firstNum.SumUp);
             LongNumberParse.RemoveZerosFromEndOfList(list);
             LongNumberSign sign = list[list.Count - 1] < 0 ? LongNumberSign.minus : LongNumberSign.plus;
             CorrectData(list, CorrectDigits);
-            return new LongNumber(list, sign);
+            return new LongNumber(sign, list);
         }
+        public static LongNumber operator -(LongNumber firstNum)
+            =>new LongNumber((LongNumberSign)((int)firstNum._numberSign * -1), firstNum._digits);
         public static LongNumber operator -(LongNumber firstNum, LongNumber secondNum)
         {
-            List<long> list = OperateAllDigits(firstNum, secondNum, SumUp);
+            List<long> list = OperateAllDigits(firstNum, secondNum, firstNum.Reduce);
             LongNumberParse.RemoveZerosFromEndOfList(list);
             LongNumberSign sign = list[list.Count - 1] < 0 ? LongNumberSign.minus : LongNumberSign.plus;
             CorrectData(list, CorrectDigits);
-            return new LongNumber(list, sign);
+            return new LongNumber(sign, list);
         }
         public static LongNumber operator *(LongNumber firstNum, LongNumber secondNum)
         {
@@ -53,22 +61,28 @@ namespace LongLibrary
                 (secondNum, firstNum) = (firstNum, secondNum);
 
             var number = new LongNumber();
+            var zeros = new List<long>();
             var list = new List<long>();
             for (var i = 0; i < secondNum.Count; i++)
             {
                 list.Clear();
+                list.AddRange(zeros);
                 for (var j = 0; j < firstNum.Count; j++)
                     list.Add(firstNum._digits[j] * secondNum._digits[i]);
-                number += new LongNumber(list, LongNumberSign.plus);
+                number.SumUp(list);
+                number.CorrectPlusDigits();
+                zeros.Add(0);
             }
             number._numberSign = sign;
             return number;
         }
+        public static LongNumber operator /(LongNumber firstNum, LongNumber secondNum)
+            =>firstNum.Devide(secondNum).Item1;
         public static bool operator >=(LongNumber firstNum, LongNumber secondNum)
         {
             if (firstNum._numberSign != secondNum._numberSign)
                 return firstNum._numberSign == LongNumberSign.minus ? false : true;
-            var list = OperateAllDigits(firstNum, secondNum, Reduce);
+            var list = OperateAllDigits(firstNum, secondNum, firstNum.Reduce);
             LongNumberParse.RemoveZerosFromEndOfList(list);
             LongNumberSign sign = list[list.Count - 1] < 0 ? LongNumberSign.minus : LongNumberSign.plus;
             return sign == firstNum._numberSign;
@@ -90,16 +104,15 @@ namespace LongLibrary
         {
             for(int i =0;i < digits.Count - 1;i++)
             {
-                //var additionDigits = digits[i] / _basis;
                 if (digits[i] >= _basis)
                 {
-                    digits[i + 1]++; //additionDigits;
-                    digits[i] -= _basis; //* additionDigits;
+                    digits[i + 1]++;
+                    digits[i] -= _basis;
                 }
                 else if (digits[i] < 0)
                 {
-                    digits[i + 1]--; //additionDigits;
-                    digits[i] += _basis; //* additionDigits;
+                    digits[i + 1]--;
+                    digits[i] += _basis;
                 }
                 digits[i] = Math.Abs(digits[i]);
             }
@@ -122,25 +135,6 @@ namespace LongLibrary
             }
             else if (last < 0)
                 digits[digits.Count - 1] = Math.Abs(last);
-        }
-        private static void CorrectListMultipleDigit(List<long> list)
-        {
-            for (int g = 0; g < list.Count - 1; g++)
-            {
-                var additionDigits = list[g] / _basis;
-                if (list[g] >= _basis)
-                {
-                    list[g + 1] += additionDigits;
-                    list[g] -= _basis * additionDigits;
-                }
-            }
-            var last = list[list.Count - 1];
-            if (last >= _basis)
-            {
-                last -= _basis;
-                list[list.Count - 1] = last;
-                list.Add(1);
-            }
         }
         private static List<long> OperateAllDigits(LongNumber firstNum, LongNumber secondNum, Func<long,long,long> func)
         {
@@ -176,10 +170,72 @@ namespace LongLibrary
         }
         public static bool operator !=(LongNumber firstNum, LongNumber secondNum)
             => !(firstNum == secondNum);
-        public static long SumUp(long a, long b)
+        private (LongNumber, LongNumber) Devide(LongNumber devideNumber)
+        {
+            if (this < devideNumber)
+                return (new LongNumber(), new LongNumber(this));
+
+            LongNumberSign sign = (LongNumberSign)((int)_numberSign * (int)devideNumber._numberSign);
+            var number = new LongNumber(this);
+            var answer = new LongNumber(nums: 1);
+            LongNumber mod = new();
+
+            while(true)
+            {
+                mod = this - answer * devideNumber;
+                if (mod < devideNumber)
+                    break;
+            }
+
+            return (answer, this - (answer * devideNumber));
+        }
+        private long SumUp(long a, long b)
             => a + b;
-        public static long Reduce(long a, long b)
+        private long Reduce(long a, long b)
             => a - b;
+        private void CorrectPlusDigits()
+        {
+            long additionDigits = 0;
+            for (int i = 0; i < _digits.Count - 1; i++)
+            {
+                additionDigits = _digits[i] / _basis;
+                if (_digits[i] >= _basis)
+                {
+                    _digits[i + 1]+=additionDigits;
+                    _digits[i] -= _basis * additionDigits;
+                }
+            }
+            var last = _digits[_digits.Count - 1];
+            additionDigits = last / _basis;
+            if (last >= _basis)
+            {
+                _digits[_digits.Count - 1] -= _basis * additionDigits;
+                _digits.Add(0);
+                _digits[_digits.Count - 1] = additionDigits;
+            }
+            LongNumberParse.RemoveZerosFromEndOfList(_digits);
+        }
+        private void SumUp(List<long> list)
+        {
+            List<long> newList = new();
+            var length = Count > list.Count ? Count : list.Count;
+            for (var i = 0; i < length; i++)
+            {
+                long num1;
+                long num2;
+                if (i < Count)
+                    num1 = _digits[i];
+                else
+                    num1 = 0;
+
+                if (i < list.Count)
+                    num2 = list[i];
+                else
+                    num2 = 0;
+                newList.Add(num1 + num2);
+            }
+            _digits = newList;
+        }
         #endregion Operators
         #region ToString
         public override string ToString()
@@ -208,11 +264,7 @@ namespace LongLibrary
         #endregion ToString
         #region Clone
         public object Clone()
-        {
-            var digits = new List<long>(_digits);
-            var numberSign = _numberSign;
-            return new LongNumber(digits, numberSign);
-        }
+            => new LongNumber(_numberSign, new List<long>(_digits));
         #endregion Clone
     }
     public enum LongNumberSign

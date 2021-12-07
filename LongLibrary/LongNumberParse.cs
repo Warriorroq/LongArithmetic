@@ -22,11 +22,11 @@ namespace LongLibrary
                 if (char.IsDigit(bigNum[index]))
                     builder.Append(bigNum[index]);
                 if (builder.Length >= basisLength)
-                    AddStringBuilderToDigitsList(builder, digits);
+                    digits.Add(ParseBuilderToNum(builder));
                 index--;
             }
             if (builder.Length != 0)
-                AddStringBuilderToDigitsList(builder, digits);
+                digits.Add(ParseBuilderToNum(builder));
             RemoveZerosFromEndOfList(digits);
             return digits;
         }
@@ -46,12 +46,12 @@ namespace LongLibrary
             if (number != 0)
                 list.RemoveRange(list.Count - number, number);
         }
-        private static void AddStringBuilderToDigitsList(StringBuilder builder, List<long> nums)
+        private static long ParseBuilderToNum(StringBuilder builder)
         {
             builder.Reverse();
             var digit = long.Parse(builder.ToString());
             builder.Clear();
-            nums.Add(digit);
+            return digit;
         }
     }
 }

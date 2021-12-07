@@ -11,7 +11,7 @@
                 digits.Add(0);
                 numberSign = LongNumberSign.plus;
             }
-            return new LongNumber(digits, numberSign);
+            return new LongNumber(numberSign, digits);
         }
     }
 }
