@@ -76,6 +76,16 @@ namespace LongLibrary
             number._numberSign = sign;
             return number;
         }
+        public static LongNumber operator *(LongNumber firstNum, long secondNum)
+        {
+            //LongNumberSign sign = (LongNumberSign)((int)firstNum._numberSign * (int)secondNum);
+            var list = new List<long>();
+            for (var i = 0; i < firstNum.Count; i++)                
+                list.Add(firstNum._digits[i] * secondNum);
+            var number = new LongNumber(LongNumberSign.plus, list);
+            number.CorrectPlusDigits();
+            return number;
+        }
         public static LongNumber operator /(LongNumber firstNum, LongNumber secondNum)
             =>firstNum.Devide(secondNum).Item1;
         public static bool operator >=(LongNumber firstNum, LongNumber secondNum)
@@ -176,18 +186,34 @@ namespace LongLibrary
                 return (new LongNumber(), new LongNumber(this));
 
             LongNumberSign sign = (LongNumberSign)((int)_numberSign * (int)devideNumber._numberSign);
-            var number = new LongNumber(this);
-            var answer = new LongNumber(nums: 1);
+
+            LongNumber number = new LongNumber(this);
+            LongNumber answer = new LongNumber(nums: 0);
             LongNumber mod = new();
 
             while(true)
             {
-                mod = this - answer * devideNumber;
-                if (mod < devideNumber)
+                var bigDigit = number.DequequeDigitsAsLongNum(devideNumber.Count);
+                if(bigDigit < devideNumber)
+                {
+                    mod = bigDigit;
                     break;
+                }
             }
 
-            return (answer, this - (answer * devideNumber));
+            return (answer, mod);
+        }
+        private LongNumber DequequeDigitsAsLongNum(int lastCount)
+        {
+            if (lastCount >= Count)
+                return this;
+            List<long> nums = new();
+
+            for (var i = lastCount; i > 0; i--)
+                nums.Add(_digits[Count - i]);
+            
+            _digits.RemoveRange(Count - lastCount, lastCount);
+            return new LongNumber(_numberSign, nums);
         }
         private long SumUp(long a, long b)
             => a + b;
