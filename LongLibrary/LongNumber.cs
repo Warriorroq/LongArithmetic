@@ -78,7 +78,6 @@ namespace LongLibrary
         }
         public static LongNumber operator *(LongNumber firstNum, long secondNum)
         {
-            //LongNumberSign sign = (LongNumberSign)((int)firstNum._numberSign * (int)secondNum);
             var list = new List<long>();
             for (var i = 0; i < firstNum.Count; i++)                
                 list.Add(firstNum._digits[i] * secondNum);
@@ -87,7 +86,27 @@ namespace LongLibrary
             return number;
         }
         public static LongNumber operator /(LongNumber firstNum, LongNumber secondNum)
-            =>firstNum.Devide(secondNum).Item1;
+        {
+            var signs = (firstNum._numberSign, secondNum._numberSign);
+            (firstNum._numberSign, secondNum._numberSign) = (LongNumberSign.plus, LongNumberSign.plus);
+
+            var answer = firstNum.Devide(secondNum);
+            answer._numberSign = (LongNumberSign)((int)signs.Item1 * (int)signs.Item2);
+
+            (firstNum._numberSign, secondNum._numberSign) = (signs.Item1, signs.Item2);
+            return answer;
+        }
+        public static LongNumber operator %(LongNumber firstNum, LongNumber secondNum)
+        {
+            var signs = (firstNum._numberSign, secondNum._numberSign);
+            (firstNum._numberSign, secondNum._numberSign) = (LongNumberSign.plus, LongNumberSign.plus);
+
+            var answer = firstNum - secondNum * firstNum.Devide(secondNum);
+            answer._numberSign = (LongNumberSign)((int)signs.Item1 * (int)signs.Item2);
+
+            (firstNum._numberSign, secondNum._numberSign) = (signs.Item1, signs.Item2);
+            return answer;
+        }
         public static bool operator >=(LongNumber firstNum, LongNumber secondNum)
         {
             if (firstNum._numberSign != secondNum._numberSign)
@@ -180,28 +199,62 @@ namespace LongLibrary
         }
         public static bool operator !=(LongNumber firstNum, LongNumber secondNum)
             => !(firstNum == secondNum);
-        private (LongNumber, LongNumber) Devide(LongNumber devideNumber)
+        public void Push(List<long> list)
+        {
+            var temp = _digits;
+            _digits = list;
+            _digits.AddRange(temp);
+        }
+        public void Push(long num)
+            =>_digits.Insert(0, num);
+        private LongNumber Devide(LongNumber devideNumber)
         {
             if (this < devideNumber)
-                return (new LongNumber(), new LongNumber(this));
+                return new LongNumber(this);
 
             LongNumberSign sign = (LongNumberSign)((int)_numberSign * (int)devideNumber._numberSign);
 
             LongNumber number = new LongNumber(this);
-            LongNumber answer = new LongNumber(nums: 0);
-            LongNumber mod = new();
-
-            while(true)
+            LongNumber answer = new LongNumber();            
+            var bigDigit = number.DequequeDigitsAsLongNum(devideNumber.Count);
+            while (true)
             {
-                var bigDigit = number.DequequeDigitsAsLongNum(devideNumber.Count);
-                if(bigDigit < devideNumber)
-                {
-                    mod = bigDigit;
-                    break;
-                }
-            }
+                var a = GetDivideLong(bigDigit, devideNumber);
+                answer.Push(a);
+                bigDigit -= devideNumber * a;
 
-            return (answer, mod);
+                if (number.Count == 0)
+                    break;
+                else
+                    bigDigit.Push(number.DequequeDigits(1));
+            }
+            LongNumberParse.RemoveZerosFromEndOfList(answer._digits);
+            return answer;
+        }
+        private long GetDivideLong(LongNumber main, LongNumber divider)
+        {
+            if(main < divider)
+                return 0;
+            long left = 1;
+            long middle = _basis/2;
+            long right = _basis;
+            var num = divider * middle;
+            while (true)
+            {
+                if (left == middle || middle == right)
+                    return middle;
+                if(main > num)
+                {
+                    left = middle;
+                    middle = (middle + right) / 2;
+                }
+                if (main < num)
+                {
+                    right = middle;
+                    middle = (middle + left) / 2;
+                }
+                num = divider * middle;
+            }
         }
         private LongNumber DequequeDigitsAsLongNum(int lastCount)
         {
@@ -214,6 +267,18 @@ namespace LongLibrary
             
             _digits.RemoveRange(Count - lastCount, lastCount);
             return new LongNumber(_numberSign, nums);
+        }
+        private List<long> DequequeDigits(int lastCount)
+        {
+            if (lastCount > Count)
+                return new List<long>();
+            List<long> nums = new();
+
+            for (var i = lastCount; i > 0; i--)
+                nums.Add(_digits[Count - i]);
+
+            _digits.RemoveRange(Count - lastCount, lastCount);
+            return nums;
         }
         private long SumUp(long a, long b)
             => a + b;
