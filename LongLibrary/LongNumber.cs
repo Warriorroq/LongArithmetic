@@ -209,6 +209,8 @@ namespace LongLibrary
             =>_digits.Insert(0, num);
         private LongNumber Devide(LongNumber devideNumber)
         {
+            if (devideNumber == new LongNumber())
+                throw new DivideByZeroException("0 is 0");
             if (this < devideNumber)
                 return new LongNumber(this);
 
