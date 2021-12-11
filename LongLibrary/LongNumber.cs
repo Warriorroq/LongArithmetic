@@ -214,8 +214,6 @@ namespace LongLibrary
             if (this < devideNumber)
                 return new LongNumber(this);
 
-            LongNumberSign sign = (LongNumberSign)((int)_numberSign * (int)devideNumber._numberSign);
-
             LongNumber number = new LongNumber(this);
             LongNumber answer = new LongNumber();            
             var bigDigit = number.DequequeDigitsAsLongNum(devideNumber.Count);
@@ -261,7 +259,12 @@ namespace LongLibrary
         private LongNumber DequequeDigitsAsLongNum(int lastCount)
         {
             if (lastCount >= Count)
-                return this;
+            {
+                var temp = new LongNumber(this);
+                _digits.Clear();
+                return temp;
+            }
+
             List<long> nums = new();
 
             for (var i = lastCount; i > 0; i--)
