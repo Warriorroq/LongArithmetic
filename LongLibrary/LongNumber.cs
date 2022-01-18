@@ -6,6 +6,7 @@ using System.Text;
 //public int Length => (digits.Count - 1) * basisLength + digits[digits.Count - 1].Length();
 namespace LongLibrary
 {
+    //TODO: rewrite + / - operators, remove corrects
     public class LongNumber : ICloneable
     {
         public int Count => _digits.Count;
@@ -276,7 +277,11 @@ namespace LongLibrary
         private List<long> DequequeDigits(int lastCount)
         {
             if (lastCount > Count)
-                return new List<long>();
+            {
+                var temp = _digits;
+                _digits = new List<long>();
+                return temp;
+            }
             List<long> nums = new();
 
             for (var i = lastCount; i > 0; i--)
