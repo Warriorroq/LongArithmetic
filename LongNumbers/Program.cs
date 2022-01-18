@@ -15,19 +15,21 @@ namespace LongNumbers
         {
             while (true)
             {
-                LongNumber longNumber1 = LongMath.GetLongNumber(ConsoleAsk("num1:"));
-                LongNumber longNumber2 = LongMath.GetLongNumber(ConsoleAsk("num2:"));
+                LongNumber longNumber1 = LongMath.GetLongNumber(ConsoleAsk("num1 :"));
+                LongNumber longNumber2 = LongMath.GetLongNumber(ConsoleAsk("num1 :"));
                 Console.WriteLine($"{longNumber1} + {longNumber2} = {longNumber1 + longNumber2}");
                 Console.WriteLine($"{longNumber1} - {longNumber2} = {longNumber1 - longNumber2}");
                 Console.WriteLine($"{longNumber1} * {longNumber2} = {longNumber1 * longNumber2}");
                 Console.WriteLine($"{longNumber1} / {longNumber2} = {longNumber1 / longNumber2}");
                 Console.WriteLine($"{longNumber1} % {longNumber2} = {longNumber1 % longNumber2}");
+                Console.WriteLine($"{longNumber1} % {longNumber2} - {longNumber2} = {longNumber1 % longNumber2 - longNumber2}");
                 Console.WriteLine($"{longNumber1} == {longNumber2} = {longNumber1 == longNumber2}");
                 Console.WriteLine($"{longNumber1} != {longNumber2} = {longNumber1 != longNumber2}");
                 Console.WriteLine($"{longNumber1} >= {longNumber2} = {longNumber1 >= longNumber2}");
                 Console.WriteLine($"{longNumber1} <= {longNumber2} = {longNumber1 <= longNumber2}");
                 Console.WriteLine($"{longNumber1} > {longNumber2} = {longNumber1 > longNumber2}");
                 Console.WriteLine($"{longNumber1} < {longNumber2} = {longNumber1 < longNumber2}");
+                Console.ReadKey();
             }
         }
         private string ConsoleAsk(string question)
